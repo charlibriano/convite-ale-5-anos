@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de links – Convite da Alê</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#8a52d8">
+<link rel="icon" type="image/png" href="icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky:#47ecff; --pink:#ff4f9e; --pink-deep:#d62d7c; --grape:#8a52d8; --lime:#9be83a; --sun:#ffd83a;
+    --ink:#2a1650; --ink-soft:#5b4a85; --paper:#fffaf0;
+    --display:"Lilita One","Trebuchet MS",system-ui,sans-serif; --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:var(--body);color:var(--ink);min-height:100vh;
+    background:linear-gradient(160deg,#47ecff,#8a6cf0 70%,#b58cff) fixed;
+    padding:16px max(16px,env(safe-area-inset-right)) 32px max(16px,env(safe-area-inset-left))}
+  .wrap{max-width:640px;margin:0 auto}
+  .card{background:var(--paper);border:4px solid var(--ink);border-radius:26px;box-shadow:0 8px 0 var(--ink);overflow:hidden}
+  header{background:var(--grape);color:#fff;padding:18px 18px 14px;border-bottom:4px solid var(--ink)}
+  header small{display:block;color:var(--sun);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:.74rem}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,7vw,2.2rem);line-height:1.05;text-shadow:0 3px 0 var(--ink);text-wrap:balance}
+  main{padding:16px;display:grid;gap:14px}
+  label{display:block;font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+  .hint{font-weight:600;font-size:.85rem;color:var(--ink-soft);margin-top:5px;line-height:1.35;text-transform:none;letter-spacing:0}
+  textarea,input[type=text]{width:100%;font:700 1rem/1.4 var(--body);color:var(--ink);background:#fff;border:3px solid var(--ink);border-radius:16px;padding:10px 12px}
+  textarea{min-height:130px;resize:vertical}
+  textarea:focus,input:focus{outline:4px solid var(--sun);outline-offset:1px}
+  .btn{font:400 1.05rem var(--display);color:var(--ink);background:var(--sun);border:3px solid var(--ink);border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:0 5px 0 var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent}
+  .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+  .btn:focus-visible{outline:4px solid var(--grape);outline-offset:3px}
+  .btn.go{background:#25d366}.btn.alt{background:#fff}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .list{display:grid;gap:10px}
+  .item{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 12px;display:grid;gap:8px}
+  .item b{font-family:var(--display);font-weight:400;font-size:1.15rem}
+  .item .url{font:600 .78rem/1.3 ui-monospace,Menlo,Consolas,monospace;color:var(--ink-soft);overflow-wrap:anywhere}
+  .item .btn{font-size:.9rem;padding:7px 12px;box-shadow:0 4px 0 var(--ink)}
+  .count{font-weight:800}
+  .empty{text-align:center;font-weight:700;color:var(--ink-soft);padding:14px 0}
+  .ok{background:var(--lime)!important}
+  details summary{cursor:pointer;font-weight:800;color:var(--ink-soft)}
+  details textarea{min-height:100px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+  <header>
+    <small>Convite da Alê e do SAM</small>
+    <h1>Gerador de links</h1>
+  </header>
+  <main>
+    <div>
+      <label for="nomes">Convidados (um por linha)</label>
+      <textarea id="nomes" placeholder="Maria Clara&#10;Tio João, 31 99999-8888&#10;Família Souza"></textarea>
+      <div class="hint">Se quiser enviar direto pelo WhatsApp, coloque o telefone depois de uma vírgula. Sem telefone, você escolhe o contato na hora de enviar.</div>
+    </div>
+    <div>
+      <label for="base">Endereço do convite</label>
+      <input type="text" id="base" inputmode="url" autocomplete="off" spellcheck="false">
+      <div class="hint">É o endereço do site no GitHub Pages. O nome do convidado é colocado no fim dele.</div>
+    </div>
+    <details>
+      <summary>Mensagem de envio (opcional: editar)</summary>
+      <textarea id="msg"></textarea>
+      <div class="hint">Use <b>{nome}</b> e <b>{link}</b> no texto: eles são trocados em cada convidado.</div>
+    </details>
+    <div class="row">
+      <button class="btn" id="copyAll" type="button">📋 Copiar todos os links</button>
+      <span class="count" id="count" style="align-self:center"></span>
+    </div>
+    <div class="list" id="list"></div>
+  </main>
+</div></div>
+
+<script>
+(function(){
+  var DEF_BASE='https://charlibriano.github.io/convite-ale-5-anos/';
+  var DEF_MSG='Oi, {nome}! 💜 Você é nosso convidado especial para o aniversário de 5 anos da Alê, com o tema Slime Sam Sapeca! Abra o seu convite: {link}';
+  var $=function(i){return document.getElementById(i)};
+  var nomes=$('nomes'), base=$('base'), msg=$('msg'), list=$('list'), cnt=$('count');
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  nomes.value=load('g.nomes',''); base.value=load('g.base',DEF_BASE); msg.value=load('g.msg',DEF_MSG);
+
+  function parse(){
+    return nomes.value.split('\n').map(function(l){
+      l=l.trim(); if(!l) return null;
+      var i=l.lastIndexOf(','), nome=l, tel='';
+      if(i>-1){ var t=l.slice(i+1).replace(/\D/g,''); if(t.length>=8){ nome=l.slice(0,i).trim(); tel=t; } }
+      nome=nome.replace(/\s+/g,' ').slice(0,40); if(!nome) return null;
+      if(tel&&tel.length<=11) tel='55'+tel;
+      return {nome:nome,tel:tel};
+    }).filter(Boolean);
+  }
+  function link(n){
+    var b=base.value.trim()||DEF_BASE; if(!/^https?:\/\//i.test(b)) b='https://'+b;
+    b=b.split('?')[0].split('#')[0];
+    return b+'?nome='+encodeURIComponent(n);
+  }
+  function text(p,l){ return (msg.value||DEF_MSG).split('{nome}').join(p.nome).split('{link}').join(l); }
+  function copy(t,btn,label){
+    function done(){ var o=btn.textContent; btn.textContent=label||'✅ Copiado!'; btn.classList.add('ok'); setTimeout(function(){ btn.textContent=o; btn.classList.remove('ok'); },1500); }
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=t; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); done(); }catch(e){ window.prompt('Copie o texto:',t); } document.body.removeChild(ta);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done,fallback); else fallback();
+  }
+  function render(){
+    save('g.nomes',nomes.value); save('g.base',base.value); save('g.msg',msg.value);
+    var ps=parse(); list.textContent=''; cnt.textContent=ps.length?(ps.length+(ps.length>1?' links':' link')):'';
+    if(!ps.length){ var e=document.createElement('div'); e.className='empty'; e.textContent='Escreva os nomes acima e os links aparecem aqui.'; list.appendChild(e); return; }
+    ps.forEach(function(p){
+      var l=link(p.nome), it=document.createElement('div'); it.className='item';
+      var b=document.createElement('b'); b.textContent=p.nome; it.appendChild(b);
+      var u=document.createElement('div'); u.className='url'; u.textContent=l; it.appendChild(u);
+      var r=document.createElement('div'); r.className='row';
+      var c=document.createElement('button'); c.type='button'; c.className='btn alt'; c.textContent='📋 Copiar link'; c.onclick=function(){ copy(l,c); }; r.appendChild(c);
+      var m=document.createElement('button'); m.type='button'; m.className='btn alt'; m.textContent='💬 Copiar mensagem'; m.onclick=function(){ copy(text(p,l),m); }; r.appendChild(m);
+      var w=document.createElement('a'); w.className='btn go'; w.target='_blank'; w.rel='noopener noreferrer'; w.textContent='WhatsApp';
+      w.href='https://wa.me/'+(p.tel||'')+'?text='+encodeURIComponent(text(p,l)); r.appendChild(w);
+      it.appendChild(r); list.appendChild(it);
+    });
+  }
+  $('copyAll').onclick=function(){
+    var ps=parse(); if(!ps.length) return;
+    copy(ps.map(function(p){ return p.nome+': '+link(p.nome); }).join('\n'),$('copyAll'));
+  };
+  [nomes,base,msg].forEach(function(e){ e.addEventListener('input',render); });
+  render();
+})();
+</script>
+</body>
+</html>
