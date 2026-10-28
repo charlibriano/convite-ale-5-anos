@@ -247,6 +247,17 @@
   #alg:focus{outline:4px solid var(--sun);outline-offset:1px}
   .sheet .btn{width:100%}
   .sheet-x{background:none;border:0;font:800 .9rem var(--body);color:var(--ink-soft);cursor:pointer;padding:2px;text-decoration:underline}
+  #loader{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(160deg,#47ecff,#8a6cf0 70%,#b58cff);transition:opacity .45s ease,visibility .45s}
+  #loader.out{opacity:0;visibility:hidden}
+  .ld-title{font-family:var(--display);font-size:clamp(2.6rem,14vw,4rem);color:var(--pink);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 5px 0 var(--ink);line-height:1}
+  .ld-title span{color:var(--sun);font-size:.6em}
+  .ld-drops{display:flex;gap:12px;height:44px;align-items:flex-end}
+  .ld-drops i{width:24px;height:24px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;border:3px solid var(--ink);animation:ldb .9s ease-in-out infinite}
+  .ld-drops i:nth-child(1){background:var(--pink)}.ld-drops i:nth-child(2){background:var(--lime);animation-delay:.15s}.ld-drops i:nth-child(3){background:var(--sky);animation-delay:.3s}
+  @keyframes ldb{0%,100%{transform:translateY(0) scale(1.1,.85)}50%{transform:translateY(-18px) scale(.9,1.12)}}
+  .ld-bar{width:min(220px,60vw);height:18px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden;box-shadow:0 4px 0 var(--ink)}
+  .ld-bar b{display:block;height:100%;width:8%;background:var(--lime);border-right:3px solid var(--ink);border-radius:999px;transition:width .35s ease}
+  .ld-txt{font-weight:800;color:#fff;letter-spacing:.04em;text-shadow:0 2px 0 var(--ink)}
   #party{position:fixed;left:0;top:0;width:100%;height:100%;z-index:90;pointer-events:none;display:none}
   .mini.party{animation:cheer .5s ease-in-out 3}
   @keyframes cheer{0%,100%{transform:translateY(0) rotate(0) scale(1)}30%{transform:translateY(-14px) rotate(-12deg) scale(.92,1.12)}60%{transform:translateY(0) rotate(10deg) scale(1.15,.85)}80%{transform:translateY(-6px) rotate(-5deg)}}
@@ -258,7 +269,14 @@
 </style>
 </head>
 <body>
-<audio id="bg-music" src="musica.mp3" preload="auto" loop playsinline></audio>
+<audio id="bg-music" src="musica.mp3" preload="none" loop playsinline></audio>
+
+<div id="loader" role="status" aria-live="polite">
+  <div class="ld-title">Alê <span>e</span> SAM</div>
+  <div class="ld-drops" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="ld-bar" aria-hidden="true"><b id="ldBar"></b></div>
+  <div class="ld-txt">Preparando a festa…</div>
+</div>
 
 <div class="page">
 
@@ -468,6 +486,33 @@
       audio=document.getElementById('bg-music'),
       mute=document.getElementById('mute');
 
+  /* ---------- carregamento: libera o convite só quando as imagens chegarem ---------- */
+  var LOAD=(function(){
+    var el=document.getElementById('loader'), bar=document.getElementById('ldBar'), need=3, done=0, part=0, hid=false;
+    function paint(){ bar.style.width=Math.min(100,Math.round(8+92*Math.min(1,(done+part)/need)))+'%'; }
+    function hide(){
+      if(hid) return; hid=true; bar.style.width='100%';
+      setTimeout(function(){
+        el.classList.add('out');
+        var ic=document.getElementById('intro-card'); ic.classList.remove('enter'); void ic.offsetWidth; ic.classList.add('enter');
+        setTimeout(function(){ var hr=document.getElementById('hero'); if(hr) hr.classList.add('go'); },2500);
+        setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },700);
+      },220);
+    }
+    setTimeout(hide,9000);   /* internet muito lenta: abre mesmo assim */
+    return {mark:function(){ done++; paint(); if(done>=need) hide(); }, part:function(f){ part=Math.min(1,f); paint(); }};
+  })();
+  (function(){
+    var c=new Image(); c.onload=c.onerror=LOAD.mark; c.src='sam-cena.jpg';
+    var s=document.getElementById('samSrc'), got=false;
+    function once(){ if(!got){ got=true; LOAD.mark(); } }
+    if(s.complete) once(); else { s.addEventListener('load',once); s.addEventListener('error',once); }
+    /* a música (4 MB) só começa a baixar no primeiro toque */
+    function pre(){ try{ audio.preload='auto'; audio.load(); }catch(e){} }
+    document.addEventListener('pointerdown',pre,{capture:true,once:true});
+    document.addEventListener('keydown',pre,{capture:true,once:true});
+  })();
+
   /* nome do convidado vem do link: ?nome=Maria%20Clara */
   var nome='';
   try{
@@ -554,8 +599,10 @@
   function applySlime(){
     var sl=SLIMES[SL.i], hue=sl.h, samImg=document.getElementById('samSrc');
     SL.c1='hsl('+hue+',100%,70%)'; SL.c2='hsl('+hue+',100%,56%)'; SL.rgba='hsla('+hue+',100%,68%,.55)';
-    SL.sam=(hue===335)?null:colorize(samImg,hue,'sam');
-    if(SL.scene&&SL.sceneOrig) SL.scene(hue===335?SL.sceneOrig:colorize(SL.sceneOrig,hue,'scene'));
+    try{
+      SL.sam=(hue===335)?null:colorize(samImg,hue,'sam');
+      if(SL.scene&&SL.sceneOrig) SL.scene(hue===335?SL.sceneOrig:colorize(SL.sceneOrig,hue,'scene'));
+    }catch(e){ SL.sam=null; }
     var mi=document.getElementById('miniImg'); if(mi){ if(!mi.dataset.o) mi.dataset.o=mi.src; try{ mi.src=SL.sam?SL.sam.toDataURL():mi.dataset.o; }catch(e){} }
     var chip=document.getElementById('mySlime');
     chip.hidden=false; chip.style.setProperty('--c','hsl('+hue+',100%,62%)');
@@ -645,7 +692,7 @@
       ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=7; ctx.lineCap='round'; ctx.setLineDash([26,300]); ctx.stroke(); ctx.restore(); ctx.setLineDash([]);
     }
     function drawSam(x,y,s,rot){
-      if(!samImg||samImg.complete===false) return;
+      if(!samImg||samImg.complete===false||!(samImg.naturalWidth||samImg.width)) return;
       ctx.save(); ctx.translate(x,y); ctx.rotate(rot); ctx.scale(s,s); ctx.drawImage(samImg,-sw/2,-sh/2,sw,sh); ctx.restore();
     }
     function frame(now){
@@ -969,10 +1016,11 @@
     var COLS=['#ffd83a','#8a52d8','#1fb8e6','#ff4f9e','#9be83a','#ff6b3d'];
     var clouds=[{x:100,y:60,k:.9,v:9},{x:720,y:-30,k:.75,v:6},{x:1250,y:90,k:1,v:12},{x:420,y:-110,k:.6,v:7}];
     var sparks=[]; for(var i=0;i<9;i++) sparks.push({x:100+Math.random()*1400,y:-160+Math.random()*420,p:Math.random()*6,r:8+Math.random()*9});
-    function ok(){ if(++loaded===total) start(); }
-    base.onload=ok; base.src='scene/base.jpg';
-    setTimeout(function(){ hero.classList.add('go'); },3500);
-    names.forEach(function(n){ var i=new Image(); i.onload=ok; i.src='scene/'+n+'.webp'; im[n]=i; });
+    var failed=false;
+    function ok(){ LOAD.part(loaded/total); if(++loaded===total){ if(!failed) start(); LOAD.mark(); } }
+    function bad(){ failed=true; ok(); }
+    base.onload=ok; base.onerror=bad; base.src='scene/base.jpg';
+    names.forEach(function(n){ var i=new Image(); i.onload=ok; i.onerror=bad; i.src='scene/'+n+'.webp'; im[n]=i; });
     SL.sceneOrig=im.sam; SL.scene=function(c){ im.sam=c; };
     function resize(){
       var r=hero.getBoundingClientRect(); if(!r.width) return;
@@ -981,6 +1029,7 @@
       s=Math.min(W/1600,H/900); ox=(W-1600*s)/2; oy=H-900*s; hero.style.setProperty('--s',s);
     }
     function spr(n,dx,dy,rot,sx,sy,px,py){
+      if(!im[n]||!im[n].naturalWidth) return;
       var m=META[n]; px=(px==null)?m.px:px; py=(py==null)?m.py:py;
       cx.save(); cx.translate(px+dx,py+dy); cx.rotate(rot); cx.scale(sx,sy); cx.translate(-px,-py);
       cx.drawImage(im[n],m.x,m.y,m.w,m.h); cx.restore();
