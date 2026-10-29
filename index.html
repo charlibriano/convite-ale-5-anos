@@ -1010,7 +1010,7 @@
       s=Math.min(W/1600,H/900); ox=(W-1600*s)/2; oy=H-900*s; hero.style.setProperty('--s',s);
     }
     function spr(n,dx,dy,rot,sx,sy,px,py){
-      if(!im[n]||!im[n].naturalWidth) return;
+      if(!im[n]||!(im[n].naturalWidth||im[n].width)) return;
       var m=META[n]; px=(px==null)?m.px:px; py=(py==null)?m.py:py;
       cx.save(); cx.translate(px+dx,py+dy); cx.rotate(rot); cx.scale(sx,sy); cx.translate(-px,-py);
       cx.drawImage(im[n],m.x,m.y,m.w,m.h); cx.restore();
