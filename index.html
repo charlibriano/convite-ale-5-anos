@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alê e SAM – Convite de aniversário</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Alê faz 5 anos e a festa é do Slime Sam Sapeca! Sábado, 05/12, às 16:00. Abra o convite.">
+<meta name="description" content="Alê faz 5 anos e a festa é do Slime Sam Sapeca! Sábado, 05/12, às 18:00. Abra o convite.">
 <meta property="og:title" content="Alê e SAM – Você foi convidado!">
-<meta property="og:description" content="A Alê faz 5 anos e a festa é do Slime Sam Sapeca! Sábado, 05/12, às 16:00. Toque para abrir o convite.">
+<meta property="og:description" content="A Alê faz 5 anos e a festa é do Slime Sam Sapeca! Sábado, 05/12, às 18:00. Toque para abrir o convite.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:url" content="https://charlibriano.github.io/convite-ale-5-anos/">
-<meta property="og:image" content="https://charlibriano.github.io/convite-ale-5-anos/og.jpg">
+<meta property="og:url" content="https://convite-alexandra.vercel.app/">
+<meta property="og:image" content="https://convite-alexandra.vercel.app/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -325,7 +325,7 @@
       <span class="guest-tag" id="guestTag">Você foi convidado!</span>
       <h1>Alê <span class="e">e</span> SAM</h1>
       <div class="rider" id="rider" role="img" aria-label="Alê"><div class="fx"><div class="ab"><img class="lg lgL" src="ale-lgL.webp" width="408" height="620" alt="" draggable="false"><img class="lg lgR" src="ale-lgR.webp" width="408" height="620" alt="" draggable="false"><img class="top" src="ale-top.webp" width="408" height="620" alt="" draggable="false"><div class="ly arR"><img class="" src="ale-br.webp" width="408" height="620" alt="" draggable="false"></div><div class="ly aU"><img class="" src="ale-up.webp" width="408" height="620" alt="" draggable="false"><div class="ly aF"><img class="" src="ale-fo.webp" width="408" height="620" alt="" draggable="false"><div class="ly aH"><img class="" src="ale-hn.webp" width="408" height="620" alt="" draggable="false"></div></div></div><img class="sl" src="ale-sl.webp" width="408" height="620" alt="" draggable="false"></div></div></div>
-      <span class="pill-bot">5 anos • sáb 05/12 • 16h</span>
+      <span class="pill-bot">5 anos • sáb 05/12 • 18h</span>
     </div>
     <div class="hello">
       <canvas id="squish" role="button" tabindex="0" aria-label="Sam. Aperte 3 vezes para abrir o convite"></canvas>
@@ -376,7 +376,7 @@
       <div class="ticket">
         <div class="trow">
           <div class="cell" role="button" tabindex="0" data-say="d"><span class="ic" style="background:var(--sun)">📅</span><div><small>Data</small><strong style="white-space:nowrap">Sáb 05/12</strong></div></div>
-          <div class="cell" role="button" tabindex="0" data-say="h"><span class="ic" style="background:var(--lime)">🕓</span><div><small>Horário</small><strong>16:00</strong></div></div>
+          <div class="cell" role="button" tabindex="0" data-say="h"><span class="ic" style="background:var(--lime)">🕕</span><div><small>Horário</small><strong>18:00</strong></div></div>
         </div>
         <div class="tear" aria-hidden="true"></div>
         <div class="cell addr" role="button" tabindex="0" data-say="a"><span class="ic" style="background:var(--sky)">📍</span><div><small>Endereço</small><strong>Rua Martinez Camelo de Souza, 378 – Novo Tupi</strong></div></div>
@@ -511,8 +511,8 @@
     document.title='Convite para '+nome+' – Alê e SAM';
   }
 
-  /* contagem regressiva (festa: sábado 05/12/2026, 16:00, horário de Brasília) */
-  var FESTA=new Date('2026-12-05T16:00:00-03:00').getTime();
+  /* contagem regressiva (festa: sábado 05/12/2026, 18:00, horário de Brasília) */
+  var FESTA=new Date('2026-12-05T18:00:00-03:00').getTime();
   var cT=document.getElementById('countT'), cBox=document.getElementById('count');
   var cEl={d:document.getElementById('cD'),h:document.getElementById('cH'),m:document.getElementById('cM'),s:document.getElementById('cS')};
   function two(n){return n<10?'0'+n:''+n}
@@ -540,7 +540,7 @@
   var local='Rua Martinez Camelo de Souza, 378 - Novo Tupi, Belo Horizonte - MG';
   document.getElementById('calBtn').href='https://calendar.google.com/calendar/render?action=TEMPLATE'
     +'&text='+encodeURIComponent('Aniversário de 5 anos da Alê e do SAM 🎉')
-    +'&dates=20261205T190000Z/20261205T220000Z'
+    +'&dates=20261205T210000Z/20261206T000000Z'
     +'&details='+encodeURIComponent('Festa do Slime Sam Sapeca! Confirme sua presença pelo convite.')
     +'&location='+encodeURIComponent(local);
 
@@ -844,7 +844,7 @@
   /* ---------- toque nas informações: o cartão balança e o Sam comenta ---------- */
   (function(){
     var kick=document.querySelector('.head2 .kicker'); kick.dataset.o=kick.textContent;
-    var mini=document.getElementById('miniSam'), say={d:'Anota: 5 de dezembro 📅',h:'Às 16h, não atrasa! 🕓',a:'Toca em Como chegar 📍'}, tm=0, nb=0;
+    var mini=document.getElementById('miniSam'), say={d:'Anota: 5 de dezembro 📅',h:'Às 18h, não atrasa! 🕕',a:'Toca em Como chegar 📍'}, tm=0, nb=0;
     function go(c){
       var k=c.getAttribute('data-say'); c.classList.remove('wob'); void c.offsetWidth; c.classList.add('wob');
       mini.classList.remove('hit'); void mini.offsetWidth; mini.classList.add('hit');
