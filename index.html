@@ -250,10 +250,25 @@
   summary::-webkit-details-marker{display:none}
   summary::after{content:"+";font-size:1.4rem;line-height:1}
   details[open] summary::after{content:"–"}
-  .gift{padding:2px 16px 16px;font-size:.95rem;line-height:1.5;color:var(--ink-soft);font-weight:600}
-  .gift h3{font-family:var(--display);font-weight:400;color:var(--pink-deep);font-size:1.05rem;margin:10px 0 4px}
-  .gift ul{padding-left:20px}
-  .gift li{margin-bottom:3px}
+  .gift{padding:0 12px 12px;font-size:.88rem;line-height:1.3;color:var(--ink-soft);font-weight:700}
+  .gsum{display:flex;align-items:center;gap:8px}
+  .gbox{display:inline-block;animation:gshake 2.6s ease-in-out infinite;transform-origin:50% 80%}
+  details[open] .gbox{animation:jelly .6s ease-out}
+  @keyframes gshake{0%,70%,100%{transform:rotate(0)}74%{transform:rotate(-14deg) scale(1.1)}78%{transform:rotate(12deg) scale(1.1)}82%{transform:rotate(-8deg)}86%{transform:rotate(6deg)}90%{transform:rotate(0)}}
+  .gint{text-align:center;font-size:.84rem;margin-bottom:2px}
+  .gcat{display:table;margin:9px 0 6px;background:var(--c);color:#fff;font-family:var(--display);font-size:.92rem;letter-spacing:.02em;padding:2px 11px 1px;border:3px solid var(--ink);border-radius:999px;box-shadow:0 2px 0 var(--ink);transform:rotate(-2deg)}
+  .ggrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .gi{display:flex;align-items:center;gap:7px;text-align:left;background:var(--c);border:2.5px solid var(--ink);border-radius:14px;padding:6px 8px;font:700 .82rem/1.2 var(--body);color:var(--ink);cursor:pointer;box-shadow:0 3px 0 var(--ink);-webkit-tap-highlight-color:transparent;transition:transform .12s,box-shadow .12s}
+  .gi.wide{grid-column:1/-1}
+  .gi b{font-weight:800;color:var(--pink-deep)}
+  .gi:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+  .ge{flex:none;width:30px;height:30px;display:grid;place-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:50%;font-size:1rem;line-height:1}
+  .gi.hit .ge{animation:jelly .55s ease-out}
+  details[open] .gcat,details[open] .gi,details[open] .gend{animation:gpop .45s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--i,0)*55ms)}
+  @keyframes gpop{from{opacity:0;transform:translateY(10px) scale(.6)}}
+  .gend{text-align:center;margin-top:10px;font-size:.84rem}
+  .gpuff{position:fixed;pointer-events:none;z-index:50;font-size:1.1rem;animation:gpuff .9s ease-out forwards}
+  @keyframes gpuff{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% - 46px)) scale(1.2) rotate(var(--r))}}
   .foot{text-align:center;font-size:.78rem;font-weight:800;letter-spacing:.06em;color:var(--ink-soft);padding-top:4px}
   .back{
     position:absolute;left:8px;top:8px;font-family:var(--display);font-size:.82rem;color:var(--ink);
@@ -391,26 +406,27 @@
         <a id="rsvp" class="btn go" target="_blank" rel="noopener noreferrer" href="#">✅ Confirmar presença</a>
 
         <details>
-          <summary>🎁 Sugestões de presente</summary>
+          <summary><span class="gsum"><span class="gbox">🎁</span> Sugestões de presente</span></summary>
           <div class="gift">
-            <p>Se quiser me presentear, aqui vão algumas ideias. O mais importante é ter você comigo! 💜</p>
-            <h3>👗 Roupas &amp; acessórios</h3>
-            <ul>
-              <li>Roupa tamanho 6 anos. Calçado nº 29/30.</li>
-              <li>Brincos de pressão.</li>
-            </ul>
-            <h3>🎨 Materiais de artesanato</h3>
-            <ul>
-              <li>Olhos malucos, pompom, haste flexível, glitter, cola colorida...</li>
-            </ul>
-            <h3>🧸 Brinquedos</h3>
-            <ul>
-              <li>Cachorro "tipo robô".</li>
-              <li>Caneta 3D.</li>
-              <li>Luminária projetor de estrelas.</li>
-              <li>Bloco magnético de montar.</li>
-            </ul>
-            <p style="margin-top:10px">Pode vir sem presente também: <b>sua presença já é um presente enorme!</b> 🎈</p>
+            <p class="gint">Se quiser me presentear, aqui vão algumas ideias. O mais importante é ter você comigo! 💜</p>
+            <div class="gcat" style="--c:var(--pink)">👗 Roupas &amp; acessórios</div>
+            <div class="ggrid">
+              <button type="button" class="gi" style="--c:#ffd1e6"><span class="ge">👕</span><span>Roupa <b>6 anos</b></span></button>
+              <button type="button" class="gi" style="--c:#ffd1e6"><span class="ge">👟</span><span>Calçado <b>nº 29/30</b></span></button>
+              <button type="button" class="gi wide" style="--c:#ffd1e6"><span class="ge">💎</span><span>Brincos de pressão</span></button>
+            </div>
+            <div class="gcat" style="--c:var(--grape)">🎨 Materiais de artesanato</div>
+            <div class="ggrid">
+              <button type="button" class="gi wide" style="--c:#e6d6ff"><span class="ge">👀</span><span>Olhos malucos, pompom, haste flexível, glitter, cola colorida...</span></button>
+            </div>
+            <div class="gcat" style="--c:var(--sky-deep)">🧸 Brinquedos</div>
+            <div class="ggrid">
+              <button type="button" class="gi" style="--c:#c9f4ff"><span class="ge">🐶</span><span>Cachorro "tipo robô"</span></button>
+              <button type="button" class="gi" style="--c:#c9f4ff"><span class="ge">🖊️</span><span>Caneta 3D</span></button>
+              <button type="button" class="gi" style="--c:#c9f4ff"><span class="ge">🌟</span><span>Luminária projetor de estrelas</span></button>
+              <button type="button" class="gi" style="--c:#c9f4ff"><span class="ge">🧲</span><span>Bloco magnético de montar</span></button>
+            </div>
+            <p class="gend">Pode vir sem presente também: <b>sua presença já é um presente enorme!</b> 🎈</p>
           </div>
         </details>
       </div>
@@ -983,6 +999,26 @@
       o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+.05);
     }catch(e){}
   }
+
+  /* ---------- sugestões de presente animadas ---------- */
+  (function(){
+    var det=document.querySelector('.gift')&&document.querySelector('.gift').parentNode; if(!det) return;
+    var els=det.querySelectorAll('.gcat,.gi,.gend'); for(var k=0;k<els.length;k++) els[k].style.setProperty('--i',k);
+    var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    det.addEventListener('toggle',function(){ if(det.open){ boing(420,820,.25,.12); setTimeout(function(){ boing(560,1000,.2,.08); },120); } });
+    det.querySelectorAll('.gi').forEach(function(b){
+      b.addEventListener('click',function(){
+        b.classList.remove('hit'); void b.offsetWidth; b.classList.add('hit');
+        boing(380+Math.random()*200,760+Math.random()*300,.22,.1);
+        if(rm) return;
+        var r=b.querySelector('.ge').getBoundingClientRect(), em=['✨','💜','⭐','💖','🎉'];
+        for(var n=0;n<4;n++){ var p=document.createElement('span'); p.className='gpuff'; p.textContent=em[(Math.random()*em.length)|0];
+          p.style.left=(r.left+r.width/2)+'px'; p.style.top=(r.top+r.height/2)+'px';
+          p.style.setProperty('--dx',((n-1.5)*22)+'px'); p.style.setProperty('--r',((Math.random()-.5)*60)+'deg');
+          p.style.animationDelay=(n*40)+'ms'; document.body.appendChild(p); setTimeout(function(x){ return function(){ x.remove(); }; }(p),1100); }
+      });
+    });
+  })();
   function hop(el,cls,snd){
     if(el.classList.contains(cls)) return;
     el.classList.add(cls); snd();
